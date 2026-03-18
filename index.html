@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CivicInquire – Policy Intensity Analysis</title>
+<title>CivicInquire – Policy Intensity Analysis Demo</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap');
 
@@ -33,7 +33,6 @@
     padding: 0 24px;
   }
 
-  /* Header */
   .header {
     background: var(--black);
     border-top: 6px solid var(--yellow);
@@ -75,7 +74,6 @@
     margin-top: 10px;
   }
 
-  /* Intro */
   .intro {
     padding: 28px 0 8px;
   }
@@ -92,7 +90,6 @@
     line-height: 1.6;
   }
 
-  /* Controls */
   .controls {
     display: flex;
     gap: 16px;
@@ -162,7 +159,6 @@
     color: var(--charcoal);
   }
 
-  /* Chart area */
   .chart-section {
     background: var(--white);
     border: 1px solid var(--lightgrey);
@@ -182,7 +178,6 @@
     margin-bottom: 20px;
   }
 
-  /* SVG box plots */
   .boxplot-container {
     width: 100%;
     overflow-x: auto;
@@ -190,38 +185,7 @@
   .boxplot-container svg {
     display: block;
   }
-  .bp-whisker { stroke: var(--charcoal); stroke-width: 1.5; }
-  .bp-box { stroke: var(--charcoal); stroke-width: 1.5; }
-  .bp-median { stroke: var(--yellow); stroke-width: 3; stroke-linecap: round; }
-  .bp-cap { stroke: var(--charcoal); stroke-width: 1.5; stroke-linecap: round; }
-  .bp-outlier { fill: none; stroke: var(--midgrey); stroke-width: 1.2; }
-  .bp-point { fill: var(--charcoal); opacity: 0.25; }
 
-  .axis-label {
-    font-family: 'DM Sans', Calibri, sans-serif;
-    font-size: 12px;
-    fill: var(--charcoal);
-  }
-  .axis-label-secondary {
-    font-family: 'DM Sans', Calibri, sans-serif;
-    font-size: 11px;
-    fill: var(--midgrey);
-  }
-  .grid-line {
-    stroke: var(--lightgrey);
-    stroke-width: 1;
-    stroke-dasharray: 3 3;
-  }
-  .y-axis-title {
-    font-family: 'DM Sans', Calibri, sans-serif;
-    font-size: 11px;
-    fill: var(--midgrey);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  /* Tooltip */
   .tooltip {
     position: fixed;
     background: var(--black);
@@ -240,7 +204,6 @@
   .tooltip.visible { opacity: 1; }
   .tooltip strong { color: var(--yellow); }
 
-  /* Summary cards */
   .summary-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -266,7 +229,6 @@
     margin-top: 4px;
   }
 
-  /* Legend */
   .legend {
     display: flex;
     align-items: center;
@@ -291,7 +253,6 @@
   .legend-swatch.median { background: var(--yellow); border-color: var(--yellow); height: 3px; width: 18px; border-radius: 2px; }
   .legend-swatch.whisker { background: none; border: none; border-top: 1.5px solid var(--charcoal); width: 18px; height: 0; }
 
-  /* Table view */
   .table-container {
     overflow-x: auto;
   }
@@ -310,6 +271,7 @@
     padding: 10px 14px;
     border-bottom: 2px solid var(--charcoal);
     white-space: nowrap;
+    cursor: pointer;
   }
   .data-table tbody td {
     padding: 10px 14px;
@@ -337,7 +299,6 @@
     min-width: 28px;
   }
 
-  /* Footer */
   .footer {
     padding: 20px 0 32px;
     border-top: 1px solid var(--lightgrey);
@@ -376,9 +337,9 @@
   <div class="container">
     <div class="header-inner">
       <div class="brand">Civic<span>Inquire</span></div>
-      <div class="header-sub">Policy Intensity Analysis · Interactive Demo with Fictitious Data</div>
+      <div class="header-sub">Policy Intensity Analysis &middot; Interactive Demo with Fictitious Data</div>
     </div>
-    <div class="sample-badge">Sample Data for Illustration</div>
+    <div class="sample-badge">All Data on This Page Is Fictitious</div>
   </div>
 </div>
 
@@ -386,7 +347,7 @@
 
   <div class="intro">
     <h2>How do municipal homelessness policies compare across Canada?</h2>
-    <p>This interactive demo illustrates how CivicInquire analyses policy intensity across six domains. All municipality names, regions, and scores shown here are entirely fictitious. In the live tool, scores are derived from publicly available municipal plans, bylaws, and program data, with each municipality scored 0–100 per domain.</p>
+    <p>This interactive demo illustrates how CivicInquire analyses policy intensity across six domains. All municipality names, regions, and scores shown here are entirely fictitious and generated for illustration purposes only. In the live tool, scores are derived from publicly available municipal plans, bylaws, and program data, with each municipality scored 0&ndash;100 per domain.</p>
   </div>
 
   <div class="summary-row" id="summaryCards"></div>
@@ -403,7 +364,7 @@
       <select id="tierFilter">
         <option value="all">All Tiers</option>
         <option value="large">Large (500k+)</option>
-        <option value="mid">Mid-size (100k–500k)</option>
+        <option value="mid">Mid-size (100k&ndash;500k)</option>
         <option value="small">Small (&lt;100k)</option>
       </select>
     </div>
@@ -416,9 +377,9 @@
   <div id="chartView">
     <div class="chart-section">
       <div class="chart-title">Policy Intensity by Domain</div>
-      <div class="chart-subtitle">Distribution of municipal scores (0–100) across policy areas</div>
+      <div class="chart-subtitle">Distribution of municipal scores (0&ndash;100) across policy areas</div>
       <div class="legend">
-        <div class="legend-item"><div class="legend-swatch box"></div>Interquartile range (Q1–Q3)</div>
+        <div class="legend-item"><div class="legend-swatch box"></div>Interquartile range (Q1&ndash;Q3)</div>
         <div class="legend-item"><div class="legend-swatch median"></div>Median</div>
         <div class="legend-item"><div class="legend-swatch whisker"></div>Min / Max (excl. outliers)</div>
       </div>
@@ -441,14 +402,13 @@
   </div>
 
   <div class="footer">
-    <p><strong>This is a demonstration only.</strong> All municipality names, regions, and scores shown on this page are entirely fictitious and do not represent real policy assessments. No real municipal data was used. In the live version of CivicInquire, scores are derived from comprehensive analysis of publicly available policy documents using AI-assisted coding and human expert review. CivicInquire is developed by the <a href="https://www.linkedin.com/company/future-cities-institute-waterloo" target="_blank">Future Cities Institute</a> at the University of Waterloo, funded by SSHRC. Contact: <a href="mailto:FCI@UWaterloo.ca">FCI@UWaterloo.ca</a></p>
+    <p><strong>This is a demonstration only.</strong> All municipality names, regions, and scores shown on this page are entirely fictitious and do not represent real policy assessments. No real municipal data was used. In the live version of CivicInquire, scores are derived from comprehensive analysis of publicly available policy documents using AI-assisted coding and human expert review. CivicInquire is developed by the <a href="https://www.linkedin.com/company/future-cities-institute-waterloo" target="_blank" rel="noopener">Future Cities Institute</a> at the University of Waterloo. Contact: <a href="mailto:FCI@UWaterloo.ca">FCI@UWaterloo.ca</a></p>
   </div>
 
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ── SAMPLE DATA ──
-const DOMAINS = [
+<script>
+var DOMAINS = [
   { key: 'shelter', label: 'Shelter & Emergency Services', short: 'Shelter' },
   { key: 'prevention', label: 'Prevention & Diversion', short: 'Prevention' },
   { key: 'housingFirst', label: 'Housing First Implementation', short: 'Housing First' },
@@ -458,17 +418,17 @@ const DOMAINS = [
 ];
 
 function seededRandom(seed) {
-  let s = seed;
+  var s = seed;
   return function() {
     s = (s * 16807) % 2147483647;
     return (s - 1) / 2147483646;
   };
 }
 
-const rand = seededRandom(42);
+var rand = seededRandom(42);
 function randBetween(a, b) { return Math.round(a + rand() * (b - a)); }
 
-const MUNIS = [
+var MUNIS = [
   { name: 'Bridgehaven', prov: 'R1', tier: 'large' },
   { name: 'Clearwater', prov: 'R1', tier: 'large' },
   { name: 'Dunmore', prov: 'R1', tier: 'mid' },
@@ -501,10 +461,8 @@ const MUNIS = [
   { name: 'Glacier Pass', prov: 'R13', tier: 'small' }
 ];
 
-// Baselines per tier so larger cities score higher on average
-const tierBase = { large: 18, mid: 8, small: 0 };
-// Domain base ranges (some domains tend higher than others)
-const domainRanges = {
+var tierBase = { large: 18, mid: 8, small: 0 };
+var domainRanges = {
   shelter:      [30, 85],
   prevention:   [15, 70],
   housingFirst: [10, 75],
@@ -513,71 +471,72 @@ const domainRanges = {
   coordination: [12, 60]
 };
 
-const data = MUNIS.map(m => {
-  const scores = {};
-  DOMAINS.forEach(d => {
-    const [lo, hi] = domainRanges[d.key];
-    const base = tierBase[m.tier];
+var data = MUNIS.map(function(m) {
+  var scores = {};
+  DOMAINS.forEach(function(d) {
+    var lo = domainRanges[d.key][0];
+    var hi = domainRanges[d.key][1];
+    var base = tierBase[m.tier];
     scores[d.key] = Math.min(100, Math.max(0, randBetween(lo + base * 0.5, Math.min(100, hi + base))));
   });
-  return { ...m, scores };
+  return { name: m.name, prov: m.prov, tier: m.tier, scores: scores };
 });
 
-const PROV_NAMES = {
+var PROV_NAMES = {
   R1: 'Region 1', R2: 'Region 2', R3: 'Region 3', R4: 'Region 4',
   R5: 'Region 5', R6: 'Region 6', R7: 'Region 7', R8: 'Region 8',
   R9: 'Region 9', R10: 'Region 10', R11: 'Region 11',
   R12: 'Region 12', R13: 'Region 13'
 };
 
-// Populate province filter
-const provSelect = document.getElementById('provinceFilter');
-const provs = [...new Set(data.map(d => d.prov))].sort();
-provs.forEach(p => {
-  const opt = document.createElement('option');
+var provSelect = document.getElementById('provinceFilter');
+var provSet = {};
+data.forEach(function(d) { provSet[d.prov] = true; });
+var provs = Object.keys(provSet).sort(function(a, b) {
+  return parseInt(a.replace('R', '')) - parseInt(b.replace('R', ''));
+});
+provs.forEach(function(p) {
+  var opt = document.createElement('option');
   opt.value = p;
   opt.textContent = PROV_NAMES[p] || p;
   provSelect.appendChild(opt);
 });
 
-// ── UTILITIES ──
 function quantile(arr, q) {
-  const sorted = [...arr].sort((a, b) => a - b);
-  const pos = (sorted.length - 1) * q;
-  const lo = Math.floor(pos);
-  const hi = Math.ceil(pos);
+  var sorted = arr.slice().sort(function(a, b) { return a - b; });
+  var pos = (sorted.length - 1) * q;
+  var lo = Math.floor(pos);
+  var hi = Math.ceil(pos);
   return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
 }
 
 function boxStats(values) {
-  const sorted = [...values].sort((a, b) => a - b);
-  const q1 = quantile(sorted, 0.25);
-  const med = quantile(sorted, 0.5);
-  const q3 = quantile(sorted, 0.75);
-  const iqr = q3 - q1;
-  const wLo = Math.max(sorted[0], q1 - 1.5 * iqr);
-  const wHi = Math.min(sorted[sorted.length - 1], q3 + 1.5 * iqr);
-  const outliers = sorted.filter(v => v < wLo || v > wHi);
-  return { q1, med, q3, wLo, wHi, outliers, min: sorted[0], max: sorted[sorted.length - 1] };
+  var sorted = values.slice().sort(function(a, b) { return a - b; });
+  var q1 = quantile(sorted, 0.25);
+  var med = quantile(sorted, 0.5);
+  var q3 = quantile(sorted, 0.75);
+  var iqr = q3 - q1;
+  var wLo = Math.max(sorted[0], q1 - 1.5 * iqr);
+  var wHi = Math.min(sorted[sorted.length - 1], q3 + 1.5 * iqr);
+  var outliers = sorted.filter(function(v) { return v < wLo || v > wHi; });
+  return { q1: q1, med: med, q3: q3, wLo: wLo, wHi: wHi, outliers: outliers };
 }
 
 function getFiltered() {
-  const prov = document.getElementById('provinceFilter').value;
-  const tier = document.getElementById('tierFilter').value;
-  return data.filter(d =>
-    (prov === 'all' || d.prov === prov) &&
-    (tier === 'all' || d.tier === tier)
-  );
+  var prov = document.getElementById('provinceFilter').value;
+  var tier = document.getElementById('tierFilter').value;
+  return data.filter(function(d) {
+    return (prov === 'all' || d.prov === prov) && (tier === 'all' || d.tier === tier);
+  });
 }
 
-// ── TOOLTIP ──
-const tooltip = document.getElementById('tooltip');
+var tooltip = document.getElementById('tooltip');
 function showTooltip(evt, html) {
   tooltip.innerHTML = html;
   tooltip.classList.add('visible');
-  const r = tooltip.getBoundingClientRect();
-  let x = evt.clientX + 14;
-  let y = evt.clientY - 10;
+  var r = tooltip.getBoundingClientRect();
+  var x = evt.clientX + 14;
+  var y = evt.clientY - 10;
   if (x + r.width > window.innerWidth - 12) x = evt.clientX - r.width - 14;
   if (y + r.height > window.innerHeight - 12) y = evt.clientY - r.height - 10;
   tooltip.style.left = x + 'px';
@@ -585,210 +544,189 @@ function showTooltip(evt, html) {
 }
 function hideTooltip() { tooltip.classList.remove('visible'); }
 
-// ── RENDER BOX PLOTS ──
 function renderBoxPlots() {
-  const filtered = getFiltered();
-  const container = document.getElementById('boxplotContainer');
+  var filtered = getFiltered();
+  var container = document.getElementById('boxplotContainer');
   if (filtered.length < 2) {
-    container.innerHTML = '<p style="color: #9A9790; padding: 40px 0; text-align: center; font-size: 14px;">Select filters with at least two municipalities to display box plots.</p>';
+    container.innerHTML = '<p style="color:#9A9790;padding:40px 0;text-align:center;font-size:14px;">Select filters with at least two municipalities to display box plots.</p>';
     return;
   }
 
-  const W = Math.max(container.clientWidth, 600);
-  const marginL = 48, marginR = 24, marginT = 12, marginB = 72;
-  const plotW = W - marginL - marginR;
-  const boxH = 48;
-  const gap = 16;
-  const H = marginT + DOMAINS.length * (boxH + gap) - gap + marginB;
+  var W = Math.max(container.clientWidth || 600, 600);
+  var marginL = 100, marginR = 24, marginT = 12, marginB = 72;
+  var plotW = W - marginL - marginR;
+  var boxH = 48;
+  var gap = 16;
+  var H = marginT + DOMAINS.length * (boxH + gap) - gap + marginB;
 
-  const scaleX = v => marginL + (v / 100) * plotW;
+  function scaleX(v) { return marginL + (v / 100) * plotW; }
 
-  let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  var svg = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
 
-  // Grid lines
-  for (let v = 0; v <= 100; v += 20) {
-    const x = scaleX(v);
-    svg += `<line x1="${x}" y1="${marginT}" x2="${x}" y2="${H - marginB}" class="grid-line"/>`;
-    svg += `<text x="${x}" y="${H - marginB + 18}" text-anchor="middle" class="axis-label-secondary">${v}</text>`;
+  for (var v = 0; v <= 100; v += 20) {
+    var x = scaleX(v);
+    svg += '<line x1="' + x + '" y1="' + marginT + '" x2="' + x + '" y2="' + (H - marginB) + '" stroke="#E8E6E1" stroke-width="1" stroke-dasharray="3 3"/>';
+    svg += '<text x="' + x + '" y="' + (H - marginB + 18) + '" text-anchor="middle" font-family="DM Sans, Calibri, sans-serif" font-size="11" fill="#9A9790">' + v + '</text>';
   }
-  svg += `<text x="${scaleX(50)}" y="${H - marginB + 40}" text-anchor="middle" class="y-axis-title">Policy Intensity Score</text>`;
+  svg += '<text x="' + scaleX(50) + '" y="' + (H - marginB + 40) + '" text-anchor="middle" font-family="DM Sans, Calibri, sans-serif" font-size="11" fill="#9A9790" font-weight="600" letter-spacing="0.5">POLICY INTENSITY SCORE</text>';
 
-  DOMAINS.forEach((dom, i) => {
-    const y = marginT + i * (boxH + gap);
-    const cy = y + boxH / 2;
-    const values = filtered.map(d => d.scores[dom.key]);
-    const stats = boxStats(values);
+  DOMAINS.forEach(function(dom, i) {
+    var y = marginT + i * (boxH + gap);
+    var cy = y + boxH / 2;
+    var values = filtered.map(function(d) { return d.scores[dom.key]; });
+    var stats = boxStats(values);
 
-    // Label
-    svg += `<text x="${marginL - 10}" y="${cy + 4}" text-anchor="end" class="axis-label" font-size="11.5">${dom.short}</text>`;
+    svg += '<text x="' + (marginL - 10) + '" y="' + (cy + 4) + '" text-anchor="end" font-family="DM Sans, Calibri, sans-serif" font-size="11.5" fill="#393838">' + dom.short + '</text>';
 
-    // Individual points (jittered)
-    filtered.forEach((d, j) => {
-      const px = scaleX(d.scores[dom.key]);
-      const jitter = (seededRandom(j * 31 + i * 97)() - 0.5) * (boxH * 0.55);
-      const py = cy + jitter;
-      svg += `<circle cx="${px}" cy="${py}" r="3.5" class="bp-point"
-        onmouseenter="showTooltip(event, '<strong>${d.name}</strong><br>${dom.label}<br>Score: ${d.scores[dom.key]}')"
-        onmouseleave="hideTooltip()" style="cursor:pointer"/>`;
+    filtered.forEach(function(d, j) {
+      var px = scaleX(d.scores[dom.key]);
+      var jitterRand = seededRandom(j * 31 + i * 97);
+      var jitter = (jitterRand() - 0.5) * (boxH * 0.55);
+      var py = cy + jitter;
+      svg += '<circle cx="' + px + '" cy="' + py + '" r="3.5" fill="#393838" opacity="0.25" onmouseenter="showTooltip(event, \'<strong>' + d.name + '<\/strong><br>' + dom.label + '<br>Score: ' + d.scores[dom.key] + '\')" onmouseleave="hideTooltip()" style="cursor:pointer"/>';
     });
 
-    // Box
-    const bx = scaleX(stats.q1);
-    const bw = scaleX(stats.q3) - bx;
-    svg += `<rect x="${bx}" y="${cy - boxH * 0.28}" width="${bw}" height="${boxH * 0.56}" rx="3" fill="rgba(247,208,68,0.22)" class="bp-box"/>`;
+    var bx = scaleX(stats.q1);
+    var bw = scaleX(stats.q3) - bx;
+    svg += '<rect x="' + bx + '" y="' + (cy - boxH * 0.28) + '" width="' + bw + '" height="' + (boxH * 0.56) + '" rx="3" fill="rgba(247,208,68,0.22)" stroke="#393838" stroke-width="1.5"/>';
 
-    // Whiskers
-    svg += `<line x1="${scaleX(stats.wLo)}" y1="${cy}" x2="${bx}" y2="${cy}" class="bp-whisker"/>`;
-    svg += `<line x1="${scaleX(stats.q3)}" y1="${cy}" x2="${scaleX(stats.wHi)}" y2="${cy}" class="bp-whisker"/>`;
-    svg += `<line x1="${scaleX(stats.wLo)}" y1="${cy - 8}" x2="${scaleX(stats.wLo)}" y2="${cy + 8}" class="bp-cap"/>`;
-    svg += `<line x1="${scaleX(stats.wHi)}" y1="${cy - 8}" x2="${scaleX(stats.wHi)}" y2="${cy + 8}" class="bp-cap"/>`;
+    svg += '<line x1="' + scaleX(stats.wLo) + '" y1="' + cy + '" x2="' + bx + '" y2="' + cy + '" stroke="#393838" stroke-width="1.5"/>';
+    svg += '<line x1="' + scaleX(stats.q3) + '" y1="' + cy + '" x2="' + scaleX(stats.wHi) + '" y2="' + cy + '" stroke="#393838" stroke-width="1.5"/>';
+    svg += '<line x1="' + scaleX(stats.wLo) + '" y1="' + (cy - 8) + '" x2="' + scaleX(stats.wLo) + '" y2="' + (cy + 8) + '" stroke="#393838" stroke-width="1.5" stroke-linecap="round"/>';
+    svg += '<line x1="' + scaleX(stats.wHi) + '" y1="' + (cy - 8) + '" x2="' + scaleX(stats.wHi) + '" y2="' + (cy + 8) + '" stroke="#393838" stroke-width="1.5" stroke-linecap="round"/>';
 
-    // Median
-    svg += `<line x1="${scaleX(stats.med)}" y1="${cy - boxH * 0.28}" x2="${scaleX(stats.med)}" y2="${cy + boxH * 0.28}" class="bp-median"
-      onmouseenter="showTooltip(event, '<strong>${dom.label}</strong><br>Median: ${Math.round(stats.med)}<br>Q1: ${Math.round(stats.q1)} · Q3: ${Math.round(stats.q3)}<br>Range: ${Math.round(stats.wLo)}–${Math.round(stats.wHi)}<br>n = ${values.length} municipalities')"
-      onmouseleave="hideTooltip()" style="cursor:pointer"/>`;
+    svg += '<line x1="' + scaleX(stats.med) + '" y1="' + (cy - boxH * 0.28) + '" x2="' + scaleX(stats.med) + '" y2="' + (cy + boxH * 0.28) + '" stroke="#F7D044" stroke-width="3" stroke-linecap="round" onmouseenter="showTooltip(event, \'<strong>' + dom.label + '<\/strong><br>Median: ' + Math.round(stats.med) + '<br>Q1: ' + Math.round(stats.q1) + ' &#183; Q3: ' + Math.round(stats.q3) + '<br>Range: ' + Math.round(stats.wLo) + '&#8211;' + Math.round(stats.wHi) + '<br>n = ' + values.length + ' municipalities\')" onmouseleave="hideTooltip()" style="cursor:pointer"/>';
 
-    // Outliers
-    stats.outliers.forEach(v => {
-      svg += `<circle cx="${scaleX(v)}" cy="${cy}" r="4" class="bp-outlier"/>`;
+    stats.outliers.forEach(function(ov) {
+      svg += '<circle cx="' + scaleX(ov) + '" cy="' + cy + '" r="4" fill="none" stroke="#9A9790" stroke-width="1.2"/>';
     });
   });
 
-  svg += '</svg>';
+  svg += '<\/svg>';
   container.innerHTML = svg;
 }
 
-// ── RENDER STRIP CHART ──
 function renderStrip() {
-  const filtered = getFiltered();
-  const container = document.getElementById('stripContainer');
+  var filtered = getFiltered();
+  var container = document.getElementById('stripContainer');
   if (filtered.length < 1) { container.innerHTML = ''; return; }
 
-  const W = Math.max(container.clientWidth, 600);
-  const marginL = 48, marginR = 24, marginT = 8, marginB = 56;
-  const plotW = W - marginL - marginR;
-  const rowH = 22;
-  const H = marginT + filtered.length * rowH + marginB;
+  var W = Math.max(container.clientWidth || 600, 600);
+  var marginL = 100, marginR = 24, marginT = 8, marginB = 56;
+  var plotW = W - marginL - marginR;
+  var rowH = 22;
+  var H = marginT + filtered.length * rowH + marginB;
 
-  const scaleX = v => marginL + (v / 100) * plotW;
+  function scaleX(v) { return marginL + (v / 100) * plotW; }
 
-  let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  var svg = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
 
-  // Grid
-  for (let v = 0; v <= 100; v += 20) {
-    const x = scaleX(v);
-    svg += `<line x1="${x}" y1="${marginT}" x2="${x}" y2="${H - marginB}" class="grid-line"/>`;
-    svg += `<text x="${x}" y="${H - marginB + 16}" text-anchor="middle" class="axis-label-secondary">${v}</text>`;
+  for (var v = 0; v <= 100; v += 20) {
+    var x = scaleX(v);
+    svg += '<line x1="' + x + '" y1="' + marginT + '" x2="' + x + '" y2="' + (H - marginB) + '" stroke="#E8E6E1" stroke-width="1" stroke-dasharray="3 3"/>';
+    svg += '<text x="' + x + '" y="' + (H - marginB + 16) + '" text-anchor="middle" font-family="DM Sans, Calibri, sans-serif" font-size="11" fill="#9A9790">' + v + '<\/text>';
   }
-  svg += `<text x="${scaleX(50)}" y="${H - marginB + 38}" text-anchor="middle" class="y-axis-title">Score</text>`;
+  svg += '<text x="' + scaleX(50) + '" y="' + (H - marginB + 38) + '" text-anchor="middle" font-family="DM Sans, Calibri, sans-serif" font-size="11" fill="#9A9790" font-weight="600">SCORE<\/text>';
 
-  const colours = ['#393838', '#F7D044', '#7B9E6B', '#C4785B', '#6B8DA8', '#A67BBF'];
+  var colours = ['#393838', '#F7D044', '#7B9E6B', '#C4785B', '#6B8DA8', '#A67BBF'];
 
-  filtered.forEach((muni, mi) => {
-    const cy = marginT + mi * rowH + rowH / 2;
-    svg += `<text x="${marginL - 10}" y="${cy + 4}" text-anchor="end" class="axis-label" font-size="10">${muni.name}</text>`;
+  filtered.forEach(function(muni, mi) {
+    var cy = marginT + mi * rowH + rowH / 2;
+    svg += '<text x="' + (marginL - 10) + '" y="' + (cy + 4) + '" text-anchor="end" font-family="DM Sans, Calibri, sans-serif" font-size="10" fill="#393838">' + muni.name + '<\/text>';
 
-    DOMAINS.forEach((dom, di) => {
-      const cx = scaleX(muni.scores[dom.key]);
-      svg += `<circle cx="${cx}" cy="${cy}" r="4.5" fill="${colours[di]}" opacity="0.7"
-        onmouseenter="showTooltip(event, '<strong>${muni.name}</strong><br>${dom.label}: ${muni.scores[dom.key]}')"
-        onmouseleave="hideTooltip()" style="cursor:pointer"/>`;
+    DOMAINS.forEach(function(dom, di) {
+      var cx = scaleX(muni.scores[dom.key]);
+      svg += '<circle cx="' + cx + '" cy="' + cy + '" r="4.5" fill="' + colours[di] + '" opacity="0.7" onmouseenter="showTooltip(event, \'<strong>' + muni.name + '<\/strong><br>' + dom.label + ': ' + muni.scores[dom.key] + '\')" onmouseleave="hideTooltip()" style="cursor:pointer"/>';
     });
   });
 
-  // Domain colour legend
-  let legendY = H - marginB + 46;
-  // Only show if there's room; otherwise skip
-  if (legendY < H + 30) {
-    // We'll put it below the chart subtitle instead
-  }
+  svg += '<\/svg>';
 
-  svg += '</svg>';
-
-  // Add inline legend below
-  let legendHtml = '<div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:8px;">';
-  DOMAINS.forEach((dom, di) => {
-    legendHtml += `<span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#9A9790">
-      <span style="width:10px;height:10px;border-radius:50%;background:${colours[di]};display:inline-block"></span>${dom.short}</span>`;
+  var legendHtml = '<div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:8px;">';
+  DOMAINS.forEach(function(dom, di) {
+    legendHtml += '<span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#9A9790"><span style="width:10px;height:10px;border-radius:50%;background:' + colours[di] + ';display:inline-block"><\/span>' + dom.short + '<\/span>';
   });
-  legendHtml += '</div>';
+  legendHtml += '<\/div>';
 
   container.innerHTML = svg + legendHtml;
 }
 
-// ── RENDER TABLE ──
-let sortCol = 'name';
-let sortDir = 1;
+var sortCol = 'name';
+var sortDir = 1;
+
 function renderTable() {
-  const filtered = getFiltered();
-  const sorted = [...filtered].sort((a, b) => {
+  var filtered = getFiltered();
+  var sorted = filtered.slice().sort(function(a, b) {
     if (sortCol === 'name') return sortDir * a.name.localeCompare(b.name);
     if (sortCol === 'prov') return sortDir * a.prov.localeCompare(b.prov);
     return sortDir * (a.scores[sortCol] - b.scores[sortCol]);
   });
 
-  let html = '<table class="data-table"><thead><tr>';
-  html += `<th style="cursor:pointer" onclick="doSort('name')">Municipality${sortCol === 'name' ? (sortDir === 1 ? ' ↑' : ' ↓') : ''}</th>`;
-  html += `<th style="cursor:pointer" onclick="doSort('prov')">Prov.${sortCol === 'prov' ? (sortDir === 1 ? ' ↑' : ' ↓') : ''}</th>`;
-  DOMAINS.forEach(d => {
-    html += `<th style="cursor:pointer" onclick="doSort('${d.key}')">${d.short}${sortCol === d.key ? (sortDir === 1 ? ' ↑' : ' ↓') : ''}</th>`;
+  var html = '<table class="data-table"><thead><tr>';
+  html += '<th onclick="doSort(\'name\')">Municipality' + (sortCol === 'name' ? (sortDir === 1 ? ' &#x2191;' : ' &#x2193;') : '') + '<\/th>';
+  html += '<th onclick="doSort(\'prov\')">Region' + (sortCol === 'prov' ? (sortDir === 1 ? ' &#x2191;' : ' &#x2193;') : '') + '<\/th>';
+  DOMAINS.forEach(function(d) {
+    html += '<th onclick="doSort(\'' + d.key + '\')">' + d.short + (sortCol === d.key ? (sortDir === 1 ? ' &#x2191;' : ' &#x2193;') : '') + '<\/th>';
   });
-  html += '</tr></thead><tbody>';
+  html += '<\/tr><\/thead><tbody>';
 
-  sorted.forEach(m => {
+  sorted.forEach(function(m) {
     html += '<tr>';
-    html += `<td style="font-weight:600">${m.name}</td>`;
-    html += `<td>${m.prov}</td>`;
-    DOMAINS.forEach(d => {
-      const v = m.scores[d.key];
-      html += `<td><div class="score-bar-cell"><span class="score-num">${v}</span><div class="score-bar" style="width:${v * 0.7}px"></div></div></td>`;
+    html += '<td style="font-weight:600">' + m.name + '<\/td>';
+    html += '<td>' + (PROV_NAMES[m.prov] || m.prov) + '<\/td>';
+    DOMAINS.forEach(function(d) {
+      var v = m.scores[d.key];
+      html += '<td><div class="score-bar-cell"><span class="score-num">' + v + '<\/span><div class="score-bar" style="width:' + (v * 0.7) + 'px"><\/div><\/div><\/td>';
     });
-    html += '</tr>';
+    html += '<\/tr>';
   });
-  html += '</tbody></table>';
+  html += '<\/tbody><\/table>';
   document.getElementById('tableContainer').innerHTML = html;
 }
-window.doSort = function(col) {
-  if (sortCol === col) sortDir *= -1;
+
+function doSort(col) {
+  if (sortCol === col) { sortDir *= -1; }
   else { sortCol = col; sortDir = 1; }
   renderTable();
-};
-
-// ── SUMMARY CARDS ──
-function renderSummary() {
-  const filtered = getFiltered();
-  const allScores = filtered.flatMap(d => DOMAINS.map(dom => d.scores[dom.key]));
-  const avg = allScores.length ? (allScores.reduce((a, b) => a + b, 0) / allScores.length).toFixed(1) : '—';
-
-  // Highest-scoring domain
-  const domAvgs = DOMAINS.map(dom => {
-    const vals = filtered.map(d => d.scores[dom.key]);
-    return { label: dom.short, avg: vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0 };
-  });
-  domAvgs.sort((a, b) => b.avg - a.avg);
-  const strongest = domAvgs[0];
-  const weakest = domAvgs[domAvgs.length - 1];
-
-  document.getElementById('summaryCards').innerHTML = `
-    <div class="summary-card"><div class="metric">${filtered.length}</div><div class="label">Municipalities in view</div></div>
-    <div class="summary-card"><div class="metric">${avg}</div><div class="label">Mean score across all domains</div></div>
-    <div class="summary-card"><div class="metric">${strongest.label}</div><div class="label">Strongest domain (avg ${strongest.avg.toFixed(1)})</div></div>
-    <div class="summary-card"><div class="metric">${weakest.label}</div><div class="label">Weakest domain (avg ${weakest.avg.toFixed(1)})</div></div>
-  `;
 }
 
-// ── VIEW TOGGLE ──
+function renderSummary() {
+  var filtered = getFiltered();
+  var allScores = [];
+  filtered.forEach(function(d) {
+    DOMAINS.forEach(function(dom) { allScores.push(d.scores[dom.key]); });
+  });
+  var avg = allScores.length ? (allScores.reduce(function(a, b) { return a + b; }, 0) / allScores.length).toFixed(1) : '—';
+
+  var domAvgs = DOMAINS.map(function(dom) {
+    var vals = filtered.map(function(d) { return d.scores[dom.key]; });
+    return { label: dom.short, avg: vals.length ? vals.reduce(function(a, b) { return a + b; }, 0) / vals.length : 0 };
+  });
+  domAvgs.sort(function(a, b) { return b.avg - a.avg; });
+  var strongest = domAvgs[0];
+  var weakest = domAvgs[domAvgs.length - 1];
+
+  document.getElementById('summaryCards').innerHTML =
+    '<div class="summary-card"><div class="metric">' + filtered.length + '<\/div><div class="label">Municipalities in view<\/div><\/div>' +
+    '<div class="summary-card"><div class="metric">' + avg + '<\/div><div class="label">Mean score across all domains<\/div><\/div>' +
+    '<div class="summary-card"><div class="metric">' + strongest.label + '<\/div><div class="label">Strongest domain (avg ' + strongest.avg.toFixed(1) + ')<\/div><\/div>' +
+    '<div class="summary-card"><div class="metric">' + weakest.label + '<\/div><div class="label">Weakest domain (avg ' + weakest.avg.toFixed(1) + ')<\/div><\/div>';
+}
+
 function switchView(view) {
   document.getElementById('chartView').style.display = view === 'chart' ? '' : 'none';
   document.getElementById('tableView').style.display = view === 'table' ? '' : 'none';
-  document.querySelectorAll('.view-toggle button').forEach(b => {
-    b.classList.toggle('active', b.dataset.view === view);
-  });
+  var buttons = document.querySelectorAll('.view-toggle button');
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i].getAttribute('data-view') === view) {
+      buttons[i].classList.add('active');
+    } else {
+      buttons[i].classList.remove('active');
+    }
+  }
   if (view === 'table') renderTable();
 }
-window.switchView = switchView;
 
-// ── INIT & LISTENERS ──
 function render() {
   renderSummary();
   renderBoxPlots();
@@ -796,4 +734,10 @@ function render() {
   renderTable();
 }
 
-document.getElementById('provi
+document.getElementById('provinceFilter').addEventListener('change', render);
+document.getElementById('tierFilter').addEventListener('change', render);
+window.addEventListener('resize', function() { renderBoxPlots(); renderStrip(); });
+render();
+</script>
+</body>
+</html>
