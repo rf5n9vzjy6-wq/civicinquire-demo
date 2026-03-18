@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CivicInquire – Policy Intensity Analysis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  :root {
+    --yellow: #F7D044;
+    --black: #000000;
+    --charcoal: #393838;
+    --offwhite: #F8F7F3;
+    --lightgrey: #E8E6E1;
+    --midgrey: #9A9790;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', Calibri, sans-serif;
+    background: var(--offwhite);
+    color: var(--charcoal);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Header */
+  .header {
+    background: var(--black);
+    border-top: 6px solid var(--yellow);
+    padding: 28px 0 24px;
+  }
+  .header-inner {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .brand {
+    font-family: 'DM Serif Display', Georgia, serif;
+    color: var(--white);
+    font-size: 26px;
+    letter-spacing: -0.3px;
+  }
+  .brand span {
+    color: var(--yellow);
+  }
+  .header-sub {
+    color: var(--midgrey);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .sample-badge {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--black);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    margin-top: 10px;
+  }
+
+  /* Intro */
+  .intro {
+    padding: 28px 0 8px;
+  }
+  .intro h2 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 22px;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+  .intro p {
+    font-size: 14.5px;
+    color: var(--charcoal);
+    max-width: 740px;
+    line-height: 1.6;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 16px;
+    padding: 20px 0 12px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .control-group label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--midgrey);
+  }
+  .control-group select {
+    font-family: 'DM Sans', Calibri, sans-serif;
+    font-size: 14px;
+    padding: 8px 32px 8px 12px;
+    border: 2px solid var(--lightgrey);
+    border-radius: 6px;
+    background: var(--white);
+    color: var(--charcoal);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23393838' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    min-width: 180px;
+    transition: border-color 0.2s;
+  }
+  .control-group select:hover,
+  .control-group select:focus {
+    border-color: var(--yellow);
+    outline: none;
+  }
+
+  .view-toggle {
+    display: flex;
+    gap: 0;
+    border: 2px solid var(--lightgrey);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-left: auto;
+  }
+  .view-toggle button {
+    font-family: 'DM Sans', Calibri, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border: none;
+    background: var(--white);
+    color: var(--midgrey);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .view-toggle button.active {
+    background: var(--black);
+    color: var(--white);
+  }
+  .view-toggle button:hover:not(.active) {
+    background: var(--lightgrey);
+    color: var(--charcoal);
+  }
+
+  /* Chart area */
+  .chart-section {
+    background: var(--white);
+    border: 1px solid var(--lightgrey);
+    border-radius: 10px;
+    padding: 28px 24px 20px;
+    margin: 12px 0 20px;
+  }
+  .chart-title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 17px;
+    color: var(--black);
+    margin-bottom: 4px;
+  }
+  .chart-subtitle {
+    font-size: 13px;
+    color: var(--midgrey);
+    margin-bottom: 20px;
+  }
+
+  /* SVG box plots */
+  .boxplot-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .boxplot-container svg {
+    display: block;
+  }
+  .bp-whisker { stroke: var(--charcoal); stroke-width: 1.5; }
+  .bp-box { stroke: var(--charcoal); stroke-width: 1.5; }
+  .bp-median { stroke: var(--yellow); stroke-width: 3; stroke-linecap: round; }
+  .bp-cap { stroke: var(--charcoal); stroke-width: 1.5; stroke-linecap: round; }
+  .bp-outlier { fill: none; stroke: var(--midgrey); stroke-width: 1.2; }
+  .bp-point { fill: var(--charcoal); opacity: 0.25; }
+
+  .axis-label {
+    font-family: 'DM Sans', Calibri, sans-serif;
+    font-size: 12px;
+    fill: var(--charcoal);
+  }
+  .axis-label-secondary {
+    font-family: 'DM Sans', Calibri, sans-serif;
+    font-size: 11px;
+    fill: var(--midgrey);
+  }
+  .grid-line {
+    stroke: var(--lightgrey);
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+  }
+  .y-axis-title {
+    font-family: 'DM Sans', Calibri, sans-serif;
+    font-size: 11px;
+    fill: var(--midgrey);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: fixed;
+    background: var(--black);
+    color: var(--white);
+    font-size: 12.5px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 100;
+    max-width: 220px;
+    line-height: 1.5;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .tooltip.visible { opacity: 1; }
+  .tooltip strong { color: var(--yellow); }
+
+  /* Summary cards */
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .summary-card {
+    background: var(--white);
+    border: 1px solid var(--lightgrey);
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--yellow);
+  }
+  .summary-card .metric {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 28px;
+    color: var(--black);
+    line-height: 1.1;
+  }
+  .summary-card .label {
+    font-size: 12.5px;
+    color: var(--midgrey);
+    margin-top: 4px;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 12px 0;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--midgrey);
+  }
+  .legend-swatch {
+    width: 24px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1.5px solid var(--charcoal);
+  }
+  .legend-swatch.box { background: rgba(247, 208, 68, 0.25); }
+  .legend-swatch.median { background: var(--yellow); border-color: var(--yellow); height: 3px; width: 18px; border-radius: 2px; }
+  .legend-swatch.whisker { background: none; border: none; border-top: 1.5px solid var(--charcoal); width: 18px; height: 0; }
+
+  /* Table view */
+  .table-container {
+    overflow-x: auto;
+  }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .data-table thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--midgrey);
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--charcoal);
+    white-space: nowrap;
+  }
+  .data-table tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--lightgrey);
+    color: var(--charcoal);
+  }
+  .data-table tbody tr:hover {
+    background: rgba(247, 208, 68, 0.07);
+  }
+  .score-bar-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .score-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--yellow);
+    min-width: 2px;
+    transition: width 0.4s ease;
+  }
+  .score-num {
+    font-weight: 600;
+    font-size: 13px;
+    min-width: 28px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 20px 0 32px;
+    border-top: 1px solid var(--lightgrey);
+    margin-top: 8px;
+  }
+  .footer p {
+    font-size: 12px;
+    color: var(--midgrey);
+    line-height: 1.6;
+  }
+  .footer strong {
+    color: var(--charcoal);
+  }
+  .footer a {
+    color: var(--charcoal);
+    text-decoration: underline;
+    text-decoration-color: var(--yellow);
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .brand { font-size: 20px; }
+    .header-inner { flex-direction: column; }
+    .controls { flex-direction: column; }
+    .control-group select { min-width: 100%; }
+    .view-toggle { margin-left: 0; }
+    .chart-section { padding: 18px 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tooltip" id="tooltip"></div>
+
+<div class="header">
+  <div class="container">
+    <div class="header-inner">
+      <div class="brand">Civic<span>Inquire</span></div>
+      <div class="header-sub">Policy Intensity Analysis · Interactive Demo with Fictitious Data</div>
+    </div>
+    <div class="sample-badge">Sample Data for Illustration</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="intro">
+    <h2>How do municipal homelessness policies compare across Canada?</h2>
+    <p>This interactive demo illustrates how CivicInquire analyses policy intensity across six domains. All municipality names, regions, and scores shown here are entirely fictitious. In the live tool, scores are derived from publicly available municipal plans, bylaws, and program data, with each municipality scored 0–100 per domain.</p>
+  </div>
+
+  <div class="summary-row" id="summaryCards"></div>
+
+  <div class="controls">
+    <div class="control-group">
+      <label>Region</label>
+      <select id="provinceFilter">
+        <option value="all">All Regions</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Population Tier</label>
+      <select id="tierFilter">
+        <option value="all">All Tiers</option>
+        <option value="large">Large (500k+)</option>
+        <option value="mid">Mid-size (100k–500k)</option>
+        <option value="small">Small (&lt;100k)</option>
+      </select>
+    </div>
+    <div class="view-toggle">
+      <button class="active" data-view="chart" onclick="switchView('chart')">Box Plots</button>
+      <button data-view="table" onclick="switchView('table')">Table</button>
+    </div>
+  </div>
+
+  <div id="chartView">
+    <div class="chart-section">
+      <div class="chart-title">Policy Intensity by Domain</div>
+      <div class="chart-subtitle">Distribution of municipal scores (0–100) across policy areas</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch box"></div>Interquartile range (Q1–Q3)</div>
+        <div class="legend-item"><div class="legend-swatch median"></div>Median</div>
+        <div class="legend-item"><div class="legend-swatch whisker"></div>Min / Max (excl. outliers)</div>
+      </div>
+      <div class="boxplot-container" id="boxplotContainer"></div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-title">Domain Comparison by Municipality</div>
+      <div class="chart-subtitle">Hover over any point to see the municipality and score</div>
+      <div class="boxplot-container" id="stripContainer"></div>
+    </div>
+  </div>
+
+  <div id="tableView" style="display:none;">
+    <div class="chart-section">
+      <div class="chart-title">Municipal Scores by Domain</div>
+      <div class="chart-subtitle">Click a column header to sort</div>
+      <div class="table-container" id="tableContainer"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p><strong>This is a demonstration only.</strong> All municipality names, regions, and scores shown on this page are entirely fictitious and do not represent real policy assessments. No real municipal data was used. In the live version of CivicInquire, scores are derived from comprehensive analysis of publicly available policy documents using AI-assisted coding and human expert review. CivicInquire is developed by the <a href="https://www.linkedin.com/company/future-cities-institute-waterloo" target="_blank">Future Cities Institute</a> at the University of Waterloo, funded by SSHRC. Contact: <a href="mailto:FCI@UWaterloo.ca">FCI@UWaterloo.ca</a></p>
+  </div>
+
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── SAMPLE DATA ──
+const DOMAINS = [
+  { key: 'shelter', label: 'Shelter & Emergency Services', short: 'Shelter' },
+  { key: 'prevention', label: 'Prevention & Diversion', short: 'Prevention' },
+  { key: 'housingFirst', label: 'Housing First Implementation', short: 'Housing First' },
+  { key: 'income', label: 'Income & Employment Support', short: 'Income' },
+  { key: 'health', label: 'Health & Substance Use Services', short: 'Health' },
+  { key: 'coordination', label: 'Coordination & Data Systems', short: 'Coordination' }
+];
+
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+const rand = seededRandom(42);
+function randBetween(a, b) { return Math.round(a + rand() * (b - a)); }
+
+const MUNIS = [
+  { name: 'Bridgehaven', prov: 'R1', tier: 'large' },
+  { name: 'Clearwater', prov: 'R1', tier: 'large' },
+  { name: 'Dunmore', prov: 'R1', tier: 'mid' },
+  { name: 'Elm Creek', prov: 'R1', tier: 'mid' },
+  { name: 'Foxfield', prov: 'R1', tier: 'mid' },
+  { name: 'Greystone', prov: 'R1', tier: 'small' },
+  { name: 'Hartland', prov: 'R1', tier: 'small' },
+  { name: 'Ironside', prov: 'R1', tier: 'small' },
+  { name: 'Juniper Bay', prov: 'R2', tier: 'large' },
+  { name: 'Kingsmere', prov: 'R2', tier: 'mid' },
+  { name: 'Lakewood', prov: 'R2', tier: 'small' },
+  { name: 'Millhaven', prov: 'R2', tier: 'small' },
+  { name: 'Northvale', prov: 'R3', tier: 'large' },
+  { name: 'Oakridge', prov: 'R3', tier: 'large' },
+  { name: 'Pine Falls', prov: 'R3', tier: 'small' },
+  { name: 'Quarry Hill', prov: 'R3', tier: 'small' },
+  { name: 'Riverbend', prov: 'R4', tier: 'large' },
+  { name: 'Stonebrook', prov: 'R4', tier: 'small' },
+  { name: 'Thorndale', prov: 'R5', tier: 'mid' },
+  { name: 'Upperfield', prov: 'R6', tier: 'large' },
+  { name: 'Valmont', prov: 'R6', tier: 'mid' },
+  { name: 'Westmoor', prov: 'R7', tier: 'mid' },
+  { name: 'Yarrow Creek', prov: 'R7', tier: 'mid' },
+  { name: 'Ashford', prov: 'R8', tier: 'mid' },
+  { name: 'Birchdale', prov: 'R9', tier: 'small' },
+  { name: 'Coppermine', prov: 'R9', tier: 'small' },
+  { name: 'Driftwood', prov: 'R10', tier: 'small' },
+  { name: 'Edgewater', prov: 'R11', tier: 'small' },
+  { name: 'Frostpoint', prov: 'R12', tier: 'small' },
+  { name: 'Glacier Pass', prov: 'R13', tier: 'small' }
+];
+
+// Baselines per tier so larger cities score higher on average
+const tierBase = { large: 18, mid: 8, small: 0 };
+// Domain base ranges (some domains tend higher than others)
+const domainRanges = {
+  shelter:      [30, 85],
+  prevention:   [15, 70],
+  housingFirst: [10, 75],
+  income:       [20, 65],
+  health:       [25, 80],
+  coordination: [12, 60]
+};
+
+const data = MUNIS.map(m => {
+  const scores = {};
+  DOMAINS.forEach(d => {
+    const [lo, hi] = domainRanges[d.key];
+    const base = tierBase[m.tier];
+    scores[d.key] = Math.min(100, Math.max(0, randBetween(lo + base * 0.5, Math.min(100, hi + base))));
+  });
+  return { ...m, scores };
+});
+
+const PROV_NAMES = {
+  R1: 'Region 1', R2: 'Region 2', R3: 'Region 3', R4: 'Region 4',
+  R5: 'Region 5', R6: 'Region 6', R7: 'Region 7', R8: 'Region 8',
+  R9: 'Region 9', R10: 'Region 10', R11: 'Region 11',
+  R12: 'Region 12', R13: 'Region 13'
+};
+
+// Populate province filter
+const provSelect = document.getElementById('provinceFilter');
+const provs = [...new Set(data.map(d => d.prov))].sort();
+provs.forEach(p => {
+  const opt = document.createElement('option');
+  opt.value = p;
+  opt.textContent = PROV_NAMES[p] || p;
+  provSelect.appendChild(opt);
+});
+
+// ── UTILITIES ──
+function quantile(arr, q) {
+  const sorted = [...arr].sort((a, b) => a - b);
+  const pos = (sorted.length - 1) * q;
+  const lo = Math.floor(pos);
+  const hi = Math.ceil(pos);
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
+}
+
+function boxStats(values) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const q1 = quantile(sorted, 0.25);
+  const med = quantile(sorted, 0.5);
+  const q3 = quantile(sorted, 0.75);
+  const iqr = q3 - q1;
+  const wLo = Math.max(sorted[0], q1 - 1.5 * iqr);
+  const wHi = Math.min(sorted[sorted.length - 1], q3 + 1.5 * iqr);
+  const outliers = sorted.filter(v => v < wLo || v > wHi);
+  return { q1, med, q3, wLo, wHi, outliers, min: sorted[0], max: sorted[sorted.length - 1] };
+}
+
+function getFiltered() {
+  const prov = document.getElementById('provinceFilter').value;
+  const tier = document.getElementById('tierFilter').value;
+  return data.filter(d =>
+    (prov === 'all' || d.prov === prov) &&
+    (tier === 'all' || d.tier === tier)
+  );
+}
+
+// ── TOOLTIP ──
+const tooltip = document.getElementById('tooltip');
+function showTooltip(evt, html) {
+  tooltip.innerHTML = html;
+  tooltip.classList.add('visible');
+  const r = tooltip.getBoundingClientRect();
+  let x = evt.clientX + 14;
+  let y = evt.clientY - 10;
+  if (x + r.width > window.innerWidth - 12) x = evt.clientX - r.width - 14;
+  if (y + r.height > window.innerHeight - 12) y = evt.clientY - r.height - 10;
+  tooltip.style.left = x + 'px';
+  tooltip.style.top = y + 'px';
+}
+function hideTooltip() { tooltip.classList.remove('visible'); }
+
+// ── RENDER BOX PLOTS ──
+function renderBoxPlots() {
+  const filtered = getFiltered();
+  const container = document.getElementById('boxplotContainer');
+  if (filtered.length < 2) {
+    container.innerHTML = '<p style="color: #9A9790; padding: 40px 0; text-align: center; font-size: 14px;">Select filters with at least two municipalities to display box plots.</p>';
+    return;
+  }
+
+  const W = Math.max(container.clientWidth, 600);
+  const marginL = 48, marginR = 24, marginT = 12, marginB = 72;
+  const plotW = W - marginL - marginR;
+  const boxH = 48;
+  const gap = 16;
+  const H = marginT + DOMAINS.length * (boxH + gap) - gap + marginB;
+
+  const scaleX = v => marginL + (v / 100) * plotW;
+
+  let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+  // Grid lines
+  for (let v = 0; v <= 100; v += 20) {
+    const x = scaleX(v);
+    svg += `<line x1="${x}" y1="${marginT}" x2="${x}" y2="${H - marginB}" class="grid-line"/>`;
+    svg += `<text x="${x}" y="${H - marginB + 18}" text-anchor="middle" class="axis-label-secondary">${v}</text>`;
+  }
+  svg += `<text x="${scaleX(50)}" y="${H - marginB + 40}" text-anchor="middle" class="y-axis-title">Policy Intensity Score</text>`;
+
+  DOMAINS.forEach((dom, i) => {
+    const y = marginT + i * (boxH + gap);
+    const cy = y + boxH / 2;
+    const values = filtered.map(d => d.scores[dom.key]);
+    const stats = boxStats(values);
+
+    // Label
+    svg += `<text x="${marginL - 10}" y="${cy + 4}" text-anchor="end" class="axis-label" font-size="11.5">${dom.short}</text>`;
+
+    // Individual points (jittered)
+    filtered.forEach((d, j) => {
+      const px = scaleX(d.scores[dom.key]);
+      const jitter = (seededRandom(j * 31 + i * 97)() - 0.5) * (boxH * 0.55);
+      const py = cy + jitter;
+      svg += `<circle cx="${px}" cy="${py}" r="3.5" class="bp-point"
+        onmouseenter="showTooltip(event, '<strong>${d.name}</strong><br>${dom.label}<br>Score: ${d.scores[dom.key]}')"
+        onmouseleave="hideTooltip()" style="cursor:pointer"/>`;
+    });
+
+    // Box
+    const bx = scaleX(stats.q1);
+    const bw = scaleX(stats.q3) - bx;
+    svg += `<rect x="${bx}" y="${cy - boxH * 0.28}" width="${bw}" height="${boxH * 0.56}" rx="3" fill="rgba(247,208,68,0.22)" class="bp-box"/>`;
+
+    // Whiskers
+    svg += `<line x1="${scaleX(stats.wLo)}" y1="${cy}" x2="${bx}" y2="${cy}" class="bp-whisker"/>`;
+    svg += `<line x1="${scaleX(stats.q3)}" y1="${cy}" x2="${scaleX(stats.wHi)}" y2="${cy}" class="bp-whisker"/>`;
+    svg += `<line x1="${scaleX(stats.wLo)}" y1="${cy - 8}" x2="${scaleX(stats.wLo)}" y2="${cy + 8}" class="bp-cap"/>`;
+    svg += `<line x1="${scaleX(stats.wHi)}" y1="${cy - 8}" x2="${scaleX(stats.wHi)}" y2="${cy + 8}" class="bp-cap"/>`;
+
+    // Median
+    svg += `<line x1="${scaleX(stats.med)}" y1="${cy - boxH * 0.28}" x2="${scaleX(stats.med)}" y2="${cy + boxH * 0.28}" class="bp-median"
+      onmouseenter="showTooltip(event, '<strong>${dom.label}</strong><br>Median: ${Math.round(stats.med)}<br>Q1: ${Math.round(stats.q1)} · Q3: ${Math.round(stats.q3)}<br>Range: ${Math.round(stats.wLo)}–${Math.round(stats.wHi)}<br>n = ${values.length} municipalities')"
+      onmouseleave="hideTooltip()" style="cursor:pointer"/>`;
+
+    // Outliers
+    stats.outliers.forEach(v => {
+      svg += `<circle cx="${scaleX(v)}" cy="${cy}" r="4" class="bp-outlier"/>`;
+    });
+  });
+
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+
+// ── RENDER STRIP CHART ──
+function renderStrip() {
+  const filtered = getFiltered();
+  const container = document.getElementById('stripContainer');
+  if (filtered.length < 1) { container.innerHTML = ''; return; }
+
+  const W = Math.max(container.clientWidth, 600);
+  const marginL = 48, marginR = 24, marginT = 8, marginB = 56;
+  const plotW = W - marginL - marginR;
+  const rowH = 22;
+  const H = marginT + filtered.length * rowH + marginB;
+
+  const scaleX = v => marginL + (v / 100) * plotW;
+
+  let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+
+  // Grid
+  for (let v = 0; v <= 100; v += 20) {
+    const x = scaleX(v);
+    svg += `<line x1="${x}" y1="${marginT}" x2="${x}" y2="${H - marginB}" class="grid-line"/>`;
+    svg += `<text x="${x}" y="${H - marginB + 16}" text-anchor="middle" class="axis-label-secondary">${v}</text>`;
+  }
+  svg += `<text x="${scaleX(50)}" y="${H - marginB + 38}" text-anchor="middle" class="y-axis-title">Score</text>`;
+
+  const colours = ['#393838', '#F7D044', '#7B9E6B', '#C4785B', '#6B8DA8', '#A67BBF'];
+
+  filtered.forEach((muni, mi) => {
+    const cy = marginT + mi * rowH + rowH / 2;
+    svg += `<text x="${marginL - 10}" y="${cy + 4}" text-anchor="end" class="axis-label" font-size="10">${muni.name}</text>`;
+
+    DOMAINS.forEach((dom, di) => {
+      const cx = scaleX(muni.scores[dom.key]);
+      svg += `<circle cx="${cx}" cy="${cy}" r="4.5" fill="${colours[di]}" opacity="0.7"
+        onmouseenter="showTooltip(event, '<strong>${muni.name}</strong><br>${dom.label}: ${muni.scores[dom.key]}')"
+        onmouseleave="hideTooltip()" style="cursor:pointer"/>`;
+    });
+  });
+
+  // Domain colour legend
+  let legendY = H - marginB + 46;
+  // Only show if there's room; otherwise skip
+  if (legendY < H + 30) {
+    // We'll put it below the chart subtitle instead
+  }
+
+  svg += '</svg>';
+
+  // Add inline legend below
+  let legendHtml = '<div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:8px;">';
+  DOMAINS.forEach((dom, di) => {
+    legendHtml += `<span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#9A9790">
+      <span style="width:10px;height:10px;border-radius:50%;background:${colours[di]};display:inline-block"></span>${dom.short}</span>`;
+  });
+  legendHtml += '</div>';
+
+  container.innerHTML = svg + legendHtml;
+}
+
+// ── RENDER TABLE ──
+let sortCol = 'name';
+let sortDir = 1;
+function renderTable() {
+  const filtered = getFiltered();
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortCol === 'name') return sortDir * a.name.localeCompare(b.name);
+    if (sortCol === 'prov') return sortDir * a.prov.localeCompare(b.prov);
+    return sortDir * (a.scores[sortCol] - b.scores[sortCol]);
+  });
+
+  let html = '<table class="data-table"><thead><tr>';
+  html += `<th style="cursor:pointer" onclick="doSort('name')">Municipality${sortCol === 'name' ? (sortDir === 1 ? ' ↑' : ' ↓') : ''}</th>`;
+  html += `<th style="cursor:pointer" onclick="doSort('prov')">Prov.${sortCol === 'prov' ? (sortDir === 1 ? ' ↑' : ' ↓') : ''}</th>`;
+  DOMAINS.forEach(d => {
+    html += `<th style="cursor:pointer" onclick="doSort('${d.key}')">${d.short}${sortCol === d.key ? (sortDir === 1 ? ' ↑' : ' ↓') : ''}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  sorted.forEach(m => {
+    html += '<tr>';
+    html += `<td style="font-weight:600">${m.name}</td>`;
+    html += `<td>${m.prov}</td>`;
+    DOMAINS.forEach(d => {
+      const v = m.scores[d.key];
+      html += `<td><div class="score-bar-cell"><span class="score-num">${v}</span><div class="score-bar" style="width:${v * 0.7}px"></div></div></td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('tableContainer').innerHTML = html;
+}
+window.doSort = function(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = 1; }
+  renderTable();
+};
+
+// ── SUMMARY CARDS ──
+function renderSummary() {
+  const filtered = getFiltered();
+  const allScores = filtered.flatMap(d => DOMAINS.map(dom => d.scores[dom.key]));
+  const avg = allScores.length ? (allScores.reduce((a, b) => a + b, 0) / allScores.length).toFixed(1) : '—';
+
+  // Highest-scoring domain
+  const domAvgs = DOMAINS.map(dom => {
+    const vals = filtered.map(d => d.scores[dom.key]);
+    return { label: dom.short, avg: vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0 };
+  });
+  domAvgs.sort((a, b) => b.avg - a.avg);
+  const strongest = domAvgs[0];
+  const weakest = domAvgs[domAvgs.length - 1];
+
+  document.getElementById('summaryCards').innerHTML = `
+    <div class="summary-card"><div class="metric">${filtered.length}</div><div class="label">Municipalities in view</div></div>
+    <div class="summary-card"><div class="metric">${avg}</div><div class="label">Mean score across all domains</div></div>
+    <div class="summary-card"><div class="metric">${strongest.label}</div><div class="label">Strongest domain (avg ${strongest.avg.toFixed(1)})</div></div>
+    <div class="summary-card"><div class="metric">${weakest.label}</div><div class="label">Weakest domain (avg ${weakest.avg.toFixed(1)})</div></div>
+  `;
+}
+
+// ── VIEW TOGGLE ──
+function switchView(view) {
+  document.getElementById('chartView').style.display = view === 'chart' ? '' : 'none';
+  document.getElementById('tableView').style.display = view === 'table' ? '' : 'none';
+  document.querySelectorAll('.view-toggle button').forEach(b => {
+    b.classList.toggle('active', b.dataset.view === view);
+  });
+  if (view === 'table') renderTable();
+}
+window.switchView = switchView;
+
+// ── INIT & LISTENERS ──
+function render() {
+  renderSummary();
+  renderBoxPlots();
+  renderStrip();
+  renderTable();
+}
+
+document.getElementById('provi
